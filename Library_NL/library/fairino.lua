@@ -2,10 +2,6 @@
 --- FAIRINO FR Lua IntelliSense-library voor VS Code. Op basis van FR Lua Programming Script User Manual V1.0.
 --- Deze declaraties zijn alleen voor autocomplete, parameterhints en documentatie.
 
----@alias FRStatus 0|1
----@alias FRPose number[] # {x, y, z, rx, ry, rz}
----@alias FRJointPos number[] # {j1, j2, j3, j4, j5, j6}
-
 
 --- Wacht het opgegeven aantal milliseconden.
 ---@param t_ms number Tijd in milliseconden.
@@ -77,212 +73,196 @@ function GetSysVarvalue(s_var) end
 
 --- Schrijft een systeemvariabele.
 ---@param s_var any Systeemvariabele-ID.
----@param value any Nieuwe waarde.
+---@param value any Variabele waarde.
 function SetSysVarvalue(s_var,value) end
 
---- Leest de waarde van een numerieke systeemvariabele.
----@param id integer Systeemvariabele-index.
----@return number Waarde.
-function GetSysNumber(id) end
-
---- Schrijft een numerieke systeemvariabele.
----@param id integer Systeemvariabele-index.
----@param value number Nieuwe waarde.
-function SetSysNumber(id,value) end
-
 --- Punt-naar-puntbeweging naar een ingeleerd punt.
----@param point_name string Naam van het doelpunt.
----@param ovl number Snelheidspercentage, 0 tot 100.
----@param blendT number -1 voor stoppen, 0 tot 500 voor blendtijd in ms.
----@param offset_flag integer 0=geen offset, 1=base/werkstuk, 2=tool.
----@param offset_x number X-offset in mm.
----@param offset_y number Y-offset in mm.
----@param offset_z number Z-offset in mm.
----@param offset_rx number Rotatie-offset Rx in graden.
----@param offset_ry number Rotatie-offset Ry in graden.
----@param offset_rz number Rotatie-offset Rz in graden.
+---@param point_name string Naam van het punt.
+---@param ovl number Snelheidspercentage [0~100%].
+---@param blendT number [-1] - voor stoppen (blocking), [0~500] - blendtijd in [ms] (nonblocking).
+---@param offset_flag integer 0=geen offset, 1=werkstuk, 2=tool, 3=workpiece.
+---@param offset_x number X-offset [mm].
+---@param offset_y number Y-offset [mm].
+---@param offset_z number Z-offset [mm].
+---@param offset_rx number Rotatie-offset Rx [°].
+---@param offset_ry number Rotatie-offset Ry [°].
+---@param offset_rz number Rotatie-offset Rz [°].
 function PTP(point_name,ovl,blendT,offset_flag,offset_x,offset_y,offset_z,offset_rx,offset_ry,offset_rz) end
 
---- Lineaire beweging naar een ingeleerd punt. De controllerhandleiding gebruikt de schrijfwijze Lin.
----@param point_name string Naam van het doelpunt.
----@param ovl number Snelheidspercentage.
----@param blendR number -1 voor stoppen, anders overgangsradius in mm.
----@param search integer Zoekmodus volgens controllerinstelling.
----@param offset_flag integer 0=geen offset, 1=werkstuk, 2=tool, 3=workpiece.
----@param offset_x number X-offset in mm.
----@param offset_y number Y-offset in mm.
----@param offset_z number Z-offset in mm.
----@param offset_rx number Rotatie-offset Rx in graden.
----@param offset_ry number Rotatie-offset Ry in graden.
----@param offset_rz number Rotatie-offset Rz in graden.
+--- Lineaire beweging naar een ingeleerd punt.
+---@param point_name string Naam van het punt.
+---@param ovl number Snelheidspercentage [0~100%].
+---@param blendR number [-1.0] - voor stoppen (blocking), [0~1000] overgangsradius in [mm] (nonblocking).
+---@param search integer [0] - Geen positionering (van lasdraad), [1] positionering (van lasdraad)
+---@param offset_flag integer [0] - geen offset, [1] - werkstuk, [2] - tool, [3] - workpiece.
+---@param offset_x number X-offset [mm].
+---@param offset_y number Y-offset [mm].
+---@param offset_z number Z-offset [mm].
+---@param offset_rx number Rotatie-offset Rx [°].
+---@param offset_ry number Rotatie-offset Ry [°].
+---@param offset_rz number Rotatie-offset Rz [°].
 ---@param speed number Physical speed (mm/s).
 ---@param acceleration number Acceleratie (mm/s²).
 function Lin(point_name,ovl,blendR,search,offset_flag,offset_x,offset_y,offset_z,offset_rx,offset_ry,offset_rz,speed,acceleration) end
 
 
 --- Gezamenlijke/joint-beweging met expliciete joint- en Cartesian-doelwaarden.
----@param j1 number Gewrichtspositie in graden.
----@param j2 number Gewrichtspositie in graden.
----@param j3 number Gewrichtspositie in graden.
----@param j4 number Gewrichtspositie in graden.
----@param j5 number Gewrichtspositie in graden.
----@param j6 number Gewrichtspositie in graden.
----@param x number Cartesische positie of offset in mm.
----@param y number Cartesische positie of offset in mm.
----@param z number Cartesische positie of offset in mm.
----@param rx number Rotatie of rotatie-offset in graden.
----@param ry number Rotatie of rotatie-offset in graden.
----@param rz number Rotatie of rotatie-offset in graden.
+---@param j1 number Jointpositie [°].
+---@param j2 number Jointpositie [°].
+---@param j3 number Jointpositie [°].
+---@param j4 number Jointpositie [°].
+---@param j5 number Jointpositie [°].
+---@param j6 number Jointpositie [°].
+---@param x number Cartesische positie [mm].
+---@param y number Cartesische positie [mm].
+---@param z number Cartesische positie [mm].
+---@param rx number Rotatie [°].
+---@param ry number Rotatie [°].
+---@param rz number Rotatie [°].
 ---@param tool integer Toolnummer.
----@param user integer Werkstukcoördinatensysteemnummer.
----@param speed number Snelheidspercentage, 0 tot 100.
----@param acc number Acceleratiepercentage.
----@param ovl number Snelheidspercentage, 0 tot 100.
+---@param user integer Werkstuknummer.
+---@param speed number Snelheidspercentage [0~100%].
+---@param acc number Acceleratiepercentage [0~100%].
+---@param ovl number Snelheidspercentage [0~100%].
 ---@param ep1 number Positie van een externe as.
 ---@param ep2 number Positie van een externe as.
 ---@param ep3 number Positie van een externe as.
 ---@param ep4 number Positie van een externe as.
----@param blendT number -1 voor stoppen, anders overgangstijd in ms.
----@param offset integer 0=geen offset, 1=base/werkstuk, 2=tool.
----@param offset_x number Cartesische positie of offset in mm.
----@param offset_y number Cartesische positie of offset in mm.
----@param offset_z number Cartesische positie of offset in mm.
----@param offset_rx number Rotatie of rotatie-offset in graden.
----@param offset_ry number Rotatie of rotatie-offset in graden.
----@param offset_rz number Rotatie of rotatie-offset in graden.
+---@param blendT number [-1] - voor stoppen (blocking), [0~500] - blendtijd in [ms] (nonblocking).
+---@param offset integer [0] - geen offset, [1] - werkstuk, [2] - tool, [3] - workpiece.
+---@param offset_x number Cartesische offset [mm].
+---@param offset_y number Cartesische offset [mm].
+---@param offset_z number Cartesische offset [mm].
+---@param offset_rx number Rotatie-offset [°].
+---@param offset_ry number Rotatie-offset [°].
+---@param offset_rz number Rotatie-offset [°].
 function MoveJ(j1,j2,j3,j4,j5,j6,x,y,z,rx,ry,rz,tool,user,speed,acc,ovl,ep1,ep2,ep3,ep4,blendT,offset,offset_x,offset_y,offset_z,offset_rx,offset_ry,offset_rz) end
 
 --- Lineaire beweging met expliciete joint- en Cartesian-doelwaarden.
----@param j1 number Gewrichtspositie in graden.
----@param j2 number Gewrichtspositie in graden.
----@param j3 number Gewrichtspositie in graden.
----@param j4 number Gewrichtspositie in graden.
----@param j5 number Gewrichtspositie in graden.
----@param j6 number Gewrichtspositie in graden.
----@param x number Cartesische positie of offset in mm.
----@param y number Cartesische positie of offset in mm.
----@param z number Cartesische positie of offset in mm.
----@param rx number Rotatie of rotatie-offset in graden.
----@param ry number Rotatie of rotatie-offset in graden.
----@param rz number Rotatie of rotatie-offset in graden.
+---@param j1 number Jointpositie [°].
+---@param j2 number Jointpositie [°].
+---@param j3 number Jointpositie [°].
+---@param j4 number Jointpositie [°].
+---@param j5 number Jointpositie [°].
+---@param j6 number Jointpositie [°].
+---@param x number Cartesische positie [mm].
+---@param y number Cartesische positie [mm].
+---@param z number Cartesische positie [mm].
+---@param rx number Rotatie [°].
+---@param ry number Rotatie [°].
+---@param rz number Rotatie [°].
 ---@param tool integer Toolnummer.
----@param user integer Werkstukcoördinatensysteemnummer.
----@param speed number Snelheidspercentage, 0 tot 100.
----@param acc number Acceleratiepercentage.
----@param ovl number Snelheidspercentage, 0 tot 100.
+---@param user integer Werkstuknummer.
+---@param speed number Snelheidspercentage [0~100%].
+---@param acc number Acceleratiepercentage [0~100%].
+---@param ovl number Snelheidspercentage [0~100%].
 ---@param ep1 number Positie van een externe as.
 ---@param ep2 number Positie van een externe as.
 ---@param ep3 number Positie van een externe as.
 ---@param ep4 number Positie van een externe as.
----@param blendR number -1 voor stoppen, anders blendradius in mm.
----@param search integer 0=geen draadzoekfunctie, 1=draadzoekfunctie.
----@param offset integer 0=geen offset, 1=base/werkstuk, 2=tool.
----@param offset_x number Cartesische positie of offset in mm.
----@param offset_y number Cartesische positie of offset in mm.
----@param offset_z number Cartesische positie of offset in mm.
----@param offset_rx number Rotatie of rotatie-offset in graden.
----@param offset_ry number Rotatie of rotatie-offset in graden.
----@param offset_rz number Rotatie of rotatie-offset in graden.
+---@param blendR number [-1] - voor stoppen, [0~1000] overgangsradius in [mm] (nonblocking).
+---@param search integer [0] - Geen positionering (van lasdraad), [1] positionering (van lasdraad)
+---@param offset integer [0] - geen offset, [1] - werkstuk, [2] - tool, [3] - workpiece.
+---@param offset_x number Cartesische offset [mm].
+---@param offset_y number Cartesische offset [mm].
+---@param offset_z number Cartesische offset [mm].
+---@param offset_rx number Rotatie-offset [°].
+---@param offset_ry number Rotatie-offset [°].
+---@param offset_rz number Rotatie-offset [°].
 function MoveL(j1,j2,j3,j4,j5,j6,x,y,z,rx,ry,rz,tool,user,speed,acc,ovl,ep1,ep2,ep3,ep4,blendR,search,offset,offset_x,offset_y,offset_z,offset_rx,offset_ry,offset_rz) end
 
+--- Boogbeweging via een middenpunt en een eindpunt.
+---@param point_p_name string Naam van het middelpunt van de boog.
+---@param poffset integer [0] - geen offset, [1] - werkstuk, [2] - tool, [3] - workpiece.
+---@param offset_px number Cartesische offset [mm].
+---@param offset_py number Cartesische offset [mm].
+---@param offset_pz number Cartesische offset [mm].
+---@param offset_prx number Rotatie offset [°].
+---@param offset_pry number Rotatie offset [°].
+---@param offset_prz number Rotatie offset [°].
+---@param point_t_name string Naam van het eindpunt van de boog.
+---@param toffset integer [0] - geen offset, [1] - werkstuk, [2] - tool, [3] - workpiece.
+---@param offset_tx number Cartesische offset [mm].
+---@param offset_ty number Cartesische offset [mm].
+---@param offset_tz number Cartesische offset [mm].
+---@param offset_trx number Rotatie offset [°].
+---@param offset_try number Rotatie offset [°].
+---@param offset_trz number Rotatie offset [°].
+---@param ovl number Snelheidspercentage [0~100%].
+---@param blend number [-1.0] - voor stoppen (blocking), [0~1000] overgangsradius in [mm] (nonblocking).
+function ARC(point_p_name,poffset,offset_px,offset_py,offset_pz,offset_prx,offset_pry,offset_prz,point_t_name,toffset,offset_tx,offset_ty,offset_tz,offset_trx,offset_try,offset_trz,ovl,blend) end
+
 --- Cirkelbeweging via een begin-/middenpunt en een eindpunt.
----@param pj1 number Parameter volgens de FR Lua-handleiding.
----@param pj2 number Parameter volgens de FR Lua-handleiding.
----@param pj3 number Parameter volgens de FR Lua-handleiding.
----@param pj4 number Parameter volgens de FR Lua-handleiding.
----@param pj5 number Parameter volgens de FR Lua-handleiding.
----@param pj6 number Parameter volgens de FR Lua-handleiding.
----@param px number Cartesische positie of offset in mm.
----@param py number Cartesische positie of offset in mm.
----@param pz number Cartesische positie of offset in mm.
----@param prx number Rotatie of rotatie-offset in graden.
----@param pry number Rotatie of rotatie-offset in graden.
----@param prz number Rotatie of rotatie-offset in graden.
+---@param pj1 number Jointpositie [°].
+---@param pj2 number Jointpositie [°].
+---@param pj3 number Jointpositie [°].
+---@param pj4 number Jointpositie [°].
+---@param pj5 number Jointpositie [°].
+---@param pj6 number Jointpositie [°].
+---@param px number Cartesische positie [mm].
+---@param py number Cartesische positie [mm].
+---@param pz number Cartesische positie [mm].
+---@param prx number Rotatie [°].
+---@param pry number Rotatie [°].
+---@param prz number Rotatie [°].
 ---@param ptool integer Toolnummer.
----@param puser integer Werkstukcoördinatensysteemnummer.
----@param pspeed number Snelheidspercentage, 0 tot 100.
----@param pacc number Acceleratiepercentage.
+---@param pusher integer Werkstuknummer.
+---@param pspeed number Snelheidspercentage [0~100%].
+---@param pacc number Acceleratiepercentage [0~100%].
 ---@param pep1 number Positie van een externe as.
 ---@param pep2 number Positie van een externe as.
 ---@param pep3 number Positie van een externe as.
 ---@param pep4 number Positie van een externe as.
----@param poffset integer 0=geen offset, 1=base/werkstuk, 2=tool.
----@param offset_px number Cartesische positie of offset in mm.
----@param offset_py number Cartesische positie of offset in mm.
----@param offset_pz number Cartesische positie of offset in mm.
----@param offset_prx number Rotatie of rotatie-offset in graden.
----@param offset_pry number Rotatie of rotatie-offset in graden.
----@param offset_prz number Rotatie of rotatie-offset in graden.
----@param tj1 number Parameter volgens de FR Lua-handleiding.
----@param tj2 number Parameter volgens de FR Lua-handleiding.
----@param tj3 number Parameter volgens de FR Lua-handleiding.
----@param tj4 number Parameter volgens de FR Lua-handleiding.
----@param tj5 number Parameter volgens de FR Lua-handleiding.
----@param tj6 number Parameter volgens de FR Lua-handleiding.
----@param tx number Cartesische positie of offset in mm.
----@param ty number Cartesische positie of offset in mm.
----@param tz number Cartesische positie of offset in mm.
----@param trx number Rotatie of rotatie-offset in graden.
----@param try number Rotatie of rotatie-offset in graden.
----@param trz number Rotatie of rotatie-offset in graden.
+---@param poffset integer [0] - geen offset, [1] - werkstuk, [2] - tool, [3] - workpiece.
+---@param offset_px number Cartesische offset [mm].
+---@param offset_py number Cartesische offset [mm].
+---@param offset_pz number Cartesische offset [mm].
+---@param offset_prx number Rotatie offset [°].
+---@param offset_pry number Rotatie offset [°].
+---@param offset_prz number Rotatie offset [°].
+---@param tj1 number Jointpositie van het doelpunt [°].
+---@param tj2 number Jointpositie van het doelpunt [°].
+---@param tj3 number Jointpositie van het doelpunt [°].
+---@param tj4 number Jointpositie van het doelpunt [°].
+---@param tj5 number Jointpositie van het doelpunt [°].
+---@param tj6 number Jointpositie van het doelpunt [°].
+---@param tx number Cartesische positie van het doelpunt [mm].
+---@param ty number Cartesische positie van het doelpunt [mm].
+---@param tz number Cartesische positie van het doelpunt [mm].
+---@param trx number Rotatie van het doelpunt [°].
+---@param try number Rotatie van het doelpunt [°].
+---@param trz number Rotatie van het doelpunt [°].
 ---@param ttool integer Toolnummer.
----@param tuser integer Werkstukcoördinatensysteemnummer.
----@param tspeed number Snelheidspercentage, 0 tot 100.
----@param tacc number Acceleratiepercentage.
+---@param tuser integer Werkstuknummer.
+---@param tspeed number Snelheidspercentage [0~100%].
+---@param tacc number Acceleratiepercentage [0~100%].
 ---@param tep1 number Positie van een externe as.
 ---@param tep2 number Positie van een externe as.
 ---@param tep3 number Positie van een externe as.
 ---@param tep4 number Positie van een externe as.
----@param toffset integer 0=geen offset, 1=base/werkstuk, 2=tool.
----@param offset_tx number Cartesische positie of offset in mm.
----@param offset_ty number Cartesische positie of offset in mm.
----@param offset_tz number Cartesische positie of offset in mm.
----@param offset_trx number Rotatie of rotatie-offset in graden.
----@param offset_try number Rotatie of rotatie-offset in graden.
----@param offset_trz number Rotatie of rotatie-offset in graden.
----@param ovl number Snelheidspercentage, 0 tot 100.
----@param blendR number -1 voor stoppen, anders blendradius in mm.
-function MoveC(pj1,pj2,pj3,pj4,pj5,pj6,px,py,pz,prx,pry,prz,ptool,puser,pspeed,pacc,pep1,pep2,pep3,pep4,poffset,offset_px,offset_py,offset_pz,offset_prx,offset_pry,offset_prz,tj1,tj2,tj3,tj4,tj5,tj6,tx,ty,tz,trx,try,trz,ttool,tuser,tspeed,tacc,tep1,tep2,tep3,tep4,toffset,offset_tx,offset_ty,offset_tz,offset_trx,offset_try,offset_trz,ovl,blendR) end
+---@param toffset integer [0] - geen offset, [1] - werkstuk, [2] - tool, [3] - workpiece.
+---@param offset_tx number Cartesische offset [mm].
+---@param offset_ty number Cartesische offset [mm].
+---@param offset_tz number Cartesische offset [mm].
+---@param offset_trx number Rotatie offset [°].
+---@param offset_try number Rotatie offset [°].
+---@param offset_trz number Rotatie offset [°].
+---@param ovl number Snelheidspercentage [0~100%].
+---@param blendR number [-1.0] - voor stoppen (blocking), [0~1000] overgangsradius in
+function MoveC(pj1,pj2,pj3,pj4,pj5,pj6,px,py,pz,prx,pry,prz,ptool,pusher,pspeed,pacc,pep1,pep2,pep3,pep4,poffset,offset_px,offset_py,offset_pz,offset_prx,offset_pry,offset_prz,tj1,tj2,tj3,tj4,tj5,tj6,tx,ty,tz,trx,try,trz,ttool,tuser,tspeed,tacc,tep1,tep2,tep3,tep4,toffset,offset_tx,offset_ty,offset_tz,offset_trx,offset_try,offset_trz,ovl,blendR) end
 
---- Boogbeweging via middenpunt en eindpunt.
----@param point_p_name string Naam van het punt.
----@param poffset integer 0=geen offset, 1=base/werkstuk, 2=tool.
----@param offset_px number Cartesische positie of offset in mm.
----@param offset_py number Cartesische positie of offset in mm.
----@param offset_pz number Cartesische positie of offset in mm.
----@param offset_prx number Rotatie of rotatie-offset in graden.
----@param offset_pry number Rotatie of rotatie-offset in graden.
----@param offset_prz number Rotatie of rotatie-offset in graden.
----@param point_t_name string Naam van het punt.
----@param toffset integer 0=geen offset, 1=base/werkstuk, 2=tool.
----@param offset_tx number Cartesische positie of offset in mm.
----@param offset_ty number Cartesische positie of offset in mm.
----@param offset_tz number Cartesische positie of offset in mm.
----@param offset_trx number Rotatie of rotatie-offset in graden.
----@param offset_try number Rotatie of rotatie-offset in graden.
----@param offset_trz number Rotatie of rotatie-offset in graden.
----@param ovl number Snelheidspercentage, 0 tot 100.
----@param blend number -1 voor stoppen, anders blendradius in mm.
-function ARC(point_p_name,poffset,offset_px,offset_py,offset_pz,offset_prx,offset_pry,offset_prz,point_t_name,toffset,offset_tx,offset_ty,offset_tz,offset_trx,offset_try,offset_trz,ovl,blend) end
-
---- Volledige cirkelbeweging in Cartesian-ruimte.
----@param ... any Zie officiële Circle-signatuur.
-function Circle(...) end
-
---- Spiraalbeweging door opgegeven tussenpunten.
----@param ... any Zie officiële Spiral-signatuur.
+--- Spiraalbeweging door drie opgegeven punten.
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
 function Spiral(...) end
 
---- Alternatieve spiraalbeweging met instelbare radius en draairichting.
----@param ... any Zie officiële NewSpiral-signatuur.
+
+--- Nieuwe spiraalbeweging vanaf een opgegeven punt.
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
 function NewSpiral(...) end
 
 --- Start horizontale spiraalbeweging.
----@param rad number Spiraalradius in mm.
----@param vel number Rotatiesnelheid in omw/s.
----@param rot_direction integer 0=met de klok mee, 1=tegen de klok in.
----@param circle_angle number Spiraalhoek in graden.
-function HorizonSpiralMotionStart(rad,vel,rot_direction,circle_angle) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function HorizonSpiralMotionStart(...) end
 
 --- Beëindigt de horizontale spiraalbeweging.
 function HorizonSpiralMotionEnd() end
@@ -294,63 +274,59 @@ function SplineStart() end
 function SplineEnd() end
 
 --- Voegt een spline-segment van type punt-naar-punt toe.
----@param ... any Zie officiële SplinePP-signatuur.
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
 function SplinePP(...) end
 
 --- Voegt een lineair spline-segment toe.
----@param ... any Zie officiële SplineLINE-signatuur.
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
 function SplineLINE(...) end
 
 --- Voegt een SCIRC-spline-segment toe.
----@param pos_p_name string Naam van het boogmiddenpunt.
----@param pos_t_name string Naam van het boogeindpunt.
----@param ovl number Snelheidspercentage.
-function SCIRC(pos_p_name,pos_t_name,ovl) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function SCIRC(...) end
 
 --- Voegt een spline-cirkel-segment toe.
----@param ... any Zie officiële SplineCIRC-signatuur.
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
 function SplineCIRC(...) end
 
 --- Voegt een lineair spline-segment toe op basis van een ingeleerd punt.
----@param point_name string Naam van het doelpunt.
----@param ovl number Snelheidspercentage.
-function SLIN(point_name,ovl) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function SLIN(...) end
 
 --- Start een nieuwe splinegroep.
----@param mode integer Splinebesturingsmodus.
----@param connectTime number Verbindingstijd in ms.
-function NewSplineStart(mode,connectTime) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function NewSplineStart(...) end
 
 --- Voegt een punt toe aan de nieuwe splinegroep.
----@param ... any Zie officiële NewSplinePoint-signatuur.
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
 function NewSplinePoint(...) end
 
 --- Beëindigt de nieuwe splinegroep.
 function NewSplineEnd() end
 
 --- Start slingerbeweging voor lasapplicaties.
----@param weaveNum integer Configuratienummer van de weave-instelling.
-function WeaveStart(weaveNum) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function WeaveStart(...) end
 
 --- Beëindigt slingerbeweging.
----@param weaveNum integer Configuratienummer.
-function WeaveEnd(weaveNum) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function WeaveEnd(...) end
 
 --- Start simulatie van een slingerbeweging.
----@param weaveNum integer Configuratienummer.
-function WeaveSimStart(weaveNum) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function WeaveSimStart(...) end
 
 --- Beëindigt simulatie van een slingerbeweging.
----@param weaveNum integer Configuratienummer.
-function WeaveSimEnd(weaveNum) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function WeaveSimEnd(...) end
 
 --- Start trajectwaarschuwing voor weave.
----@param weaveNum integer Configuratienummer.
-function WeaveInspectStart(weaveNum) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function WeaveInspectStart(...) end
 
 --- Beëindigt trajectwaarschuwing voor weave.
----@param weaveNum integer Configuratienummer.
-function WeaveInspectEnd(weaveNum) end
+---@param ... any Nog niet toegevoegd. Zie FRLua programming script user manual.
+function WeaveInspectEnd(...) end
 
 --- Laadt een TPD-trajectbestand.
 ---@param name string Trajectnaam.
